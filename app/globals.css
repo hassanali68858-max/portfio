@@ -1,0 +1,272 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (driven by next-themes) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ───────────────────────── Design tokens ───────────────────────── */
+:root {
+  --bg: #fafaf9;
+  --bg-elevated: #ffffff;
+  --surface: rgb(10 10 12 / 0.025);
+  --surface-2: rgb(10 10 12 / 0.05);
+  --border: rgb(10 10 12 / 0.08);
+  --border-strong: rgb(10 10 12 / 0.15);
+  --fg: #0b0b0d;
+  --fg-muted: #55555e;
+  --fg-subtle: #8c8c94;
+  --accent: #4f55e8;
+  --accent-2: #8a5cf6;
+  --accent-fg: #ffffff;
+  --accent-soft: rgb(79 85 232 / 0.1);
+  --glass: rgb(255 255 255 / 0.62);
+  --shadow-color: 240 10% 20%;
+  --noise-opacity: 0.028;
+  --mesh-1: rgb(79 85 232 / 0.22);
+  --mesh-2: rgb(138 92 246 / 0.16);
+  --mesh-3: rgb(56 189 248 / 0.14);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #08080a;
+  --bg-elevated: #0e0e11;
+  --surface: rgb(255 255 255 / 0.028);
+  --surface-2: rgb(255 255 255 / 0.055);
+  --border: rgb(255 255 255 / 0.075);
+  --border-strong: rgb(255 255 255 / 0.14);
+  --fg: #ededef;
+  --fg-muted: #9b9ba4;
+  --fg-subtle: #5f5f68;
+  --accent: #8b93ff;
+  --accent-2: #b197fc;
+  --accent-fg: #0a0a0b;
+  --accent-soft: rgb(139 147 255 / 0.13);
+  --glass: rgb(14 14 17 / 0.55);
+  --shadow-color: 0 0% 0%;
+  --noise-opacity: 0.045;
+  --mesh-1: rgb(99 102 241 / 0.32);
+  --mesh-2: rgb(139 92 246 / 0.22);
+  --mesh-3: rgb(14 165 233 / 0.14);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-elevated: var(--bg-elevated);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-subtle: var(--fg-subtle);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-glass: var(--glass);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-geist-sans), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-drift: drift 22s ease-in-out infinite alternate;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  --animate-scroll-dot: scroll-dot 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+@keyframes drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(4%, -3%, 0) scale(1.06); }
+  100% { transform: translate3d(-3%, 4%, 0) scale(0.97); }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+@keyframes scroll-dot {
+  0% { transform: translateY(-2px); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(14px); opacity: 0; }
+}
+@keyframes dash {
+  to { stroke-dashoffset: -40; }
+}
+
+/* ───────────────────────── Base ───────────────────────── */
+@layer base {
+  * { border-color: var(--border); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-padding-top: 96px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01", "ss03";
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  p { text-wrap: pretty; }
+}
+
+/* Premium film-grain overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Custom cursor: hide native pointer only when the custom one is active */
+html.has-custom-cursor,
+html.has-custom-cursor a,
+html.has-custom-cursor button,
+html.has-custom-cursor [role="button"],
+html.has-custom-cursor label { cursor: none; }
+html.has-custom-cursor input,
+html.has-custom-cursor textarea { cursor: text; }
+
+/* Theme toggle — circular reveal via View Transitions API */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Fallback colour cross-fade when View Transitions aren't supported */
+html.theme-fade *,
+html.theme-fade *::before,
+html.theme-fade *::after {
+  transition: background-color 0.45s var(--ease-out-quint), border-color 0.45s var(--ease-out-quint),
+    color 0.45s var(--ease-out-quint), fill 0.45s var(--ease-out-quint) !important;
+}
+
+/* ───────────────────────── Utilities ───────────────────────── */
+@utility container-x {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (min-width: 768px) { padding-inline: 2rem; }
+}
+
+@utility glass {
+  background: var(--glass);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+@utility text-gradient {
+  background: linear-gradient(180deg, var(--fg) 30%, color-mix(in oklab, var(--fg) 45%, transparent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility text-accent-gradient {
+  background: linear-gradient(100deg, var(--accent) 0%, var(--accent-2) 60%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility hairline {
+  box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.06), 0 0 0 1px var(--border);
+}
+
+@utility shadow-lift {
+  box-shadow:
+    0 1px 1px hsl(var(--shadow-color) / 0.04),
+    0 8px 16px -4px hsl(var(--shadow-color) / 0.08),
+    0 24px 48px -12px hsl(var(--shadow-color) / 0.18);
+}
+
+@utility mask-fade-x {
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+@utility mask-fade-b {
+  mask-image: linear-gradient(180deg, #000 55%, transparent);
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+@utility bg-dots {
+  background-image: radial-gradient(var(--border-strong) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+.animate-dash { animation: dash 1.6s linear infinite; }
+.animate-scan { animation: scan 3.2s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-blink { animation: blink 1.6s ease-in-out infinite; }
+.svg-pulse { transform-box: fill-box; transform-origin: center; animation: pulse-ring 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+
+@keyframes scan {
+  0%, 100% { transform: translateY(0); opacity: 0; }
+  10%, 90% { opacity: 1; }
+  50% { transform: translateY(96px); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+/* ───────────────────────── Reduced motion ───────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
